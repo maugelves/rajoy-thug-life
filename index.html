@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Rajoy Thug Life</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Rajoy Thug Life</h1>
+    <p>Pulsa o pincha las letras Q, W, E para escuchar la base de Hip Hop y<br> A,S,D,F,G,H para que Mariano suelte el Flow.</p>
+
+    <div class="keys">
+
+        <div class="key" data-key="81">
+            <kbd>Q</kbd>
+            <span class="sound">Base 1</span>
+        </div>
+
+        <div class="key" data-key="87">
+            <kbd>W</kbd>
+            <span class="sound">Base 2</span>
+        </div>
+
+        <div class="key" data-key="69">
+            <kbd>E</kbd>
+            <span class="sound">Base 3</span>
+        </div>
+
+    </div>
+
+    <div class="keys">
+
+        <div class="key" data-key="65">
+            <kbd>A</kbd>
+            <span class="sound">Agua</span>
+        </div>
+
+        <div class="key" data-key="83">
+            <kbd>S</kbd>
+            <span class="sound">Alcalde</span>
+        </div>
+
+        <div class="key" data-key="68">
+            <kbd>D</kbd>
+            <span class="sound">Chuches</span>
+        </div>
+
+        <div class="key" data-key="70">
+            <kbd>F</kbd>
+            <span class="sound">Españoles</span>
+        </div>
+
+        <div class="key" data-key="71">
+            <kbd>G</kbd>
+            <span class="sound">ETA</span>
+        </div>
+
+        <div class="key" data-key="72">
+            <kbd>H</kbd>
+            <span class="sound">Vaso</span>
+        </div>
+
+    </div>
+
+    <!-- Base Audios -->
+    <audio data-key="81" data-type="base" src="sounds/base-01.mp3"></audio>
+    <audio data-key="87" data-type="base" src="sounds/base-02.mp3"></audio>
+    <audio data-key="69" data-type="base" src="sounds/base-03.mp3"></audio>
+
+    <!-- MR Audios -->
+    <audio data-key="65" data-type="mr" src="sounds/mr-agua.mp3"></audio>
+    <audio data-key="83" data-type="mr" src="sounds/mr-alcalde.mp3"></audio>
+    <audio data-key="68" data-type="mr" src="sounds/mr-chuches.mp3"></audio>
+    <audio data-key="70" data-type="mr" src="sounds/mr-espanoles.mp3"></audio>
+    <audio data-key="71" data-type="mr" src="sounds/mr-eta.mp3"></audio>
+    <audio data-key="72" data-type="mr" src="sounds/mr-vasoplato.mp3"></audio>
+
+<script>
+
+    function removeTransition(e){
+
+        var keyvalue = this.getAttribute("data-key");
+        var keyel = document.querySelector(`.key[data-key="${keyvalue}"]`)
+        keyel.classList.remove('playing');
+
+    }
+
+    function addTransition(e){
+
+        var keyvalue = this.getAttribute("data-key");
+        var keyel = document.querySelector(`.key[data-key="${keyvalue}"]`)
+        keyel.classList.add('playing');
+
+    }
+
+
+    function playSound(keycode){
+        var audio = document.querySelector(`audio[data-key="${keycode}"]`);
+        var key = document.querySelector(`.key[data-key="${keycode}"]`);
+        if(audio){
+
+            // Play the selected sound
+            if (audio.duration > 0 && !audio.paused) {
+                audio.pause();
+            }
+            else{
+
+                // Check if audio is Base of MR
+                if( audio.getAttribute("data-type") === "mr" ) {
+
+                    // Stop all the audios
+                    var audios = document.querySelectorAll("audio[data-type='mr']");
+                    audios.forEach(function(audio){audio.pause();});
+
+                }
+                else {
+
+                    // Stop all the audios
+                    var bases = document.querySelectorAll("audio[data-type='base']");
+                    bases.forEach(function(base){base.pause();});
+
+                }
+
+                audio.currentTime = 0;
+                audio.play();
+            }
+
+        }
+
+    }
+
+    function tecladown(e){
+        playSound(e.keyCode);
+    }
+
+    function clickSound(e){
+        playSound(e.currentTarget.getAttribute('data-key'));
+    }
+
+    window.addEventListener('keydown', tecladown);
+    const keys = document.querySelectorAll('.key');
+    keys.forEach( key => key.addEventListener('click', clickSound));
+
+    const audios = document.querySelectorAll('audio');
+    audios.forEach(audio => audio.addEventListener('ended', removeTransition));
+    audios.forEach(audio => audio.addEventListener('pause', removeTransition));
+    audios.forEach(audio => audio.addEventListener('play', addTransition));
+
+</script>
+
+</body>
+</html>
